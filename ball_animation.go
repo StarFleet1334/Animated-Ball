@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/inancgumus/screen"
+	"time"
+)
 
 func main() {
 
@@ -10,29 +14,60 @@ func main() {
 
 		cellEmpty = ' '
 		ball      = '⚾'
+
+		maxFrames = 1200
 	)
 
-	var cell rune
+	var (
+		px, py int
+		cell   rune
+		vx, vy = 1, 1
+	)
 
 	board := make([][]bool, width)
 	for row := range board {
 		board[row] = make([]bool, height)
 	}
 
-	buf := make([]rune, 0, width*height)
+	screen.Clear()
 
-	board[0][0] = true
+	for i := 0; i < maxFrames; i++ {
+		px += vx
+		py += vy
 
-	for y := range board[0] {
-		for x := range board {
-			cell = cellEmpty
-			if board[x][y] {
-				cell = ball
-			}
-			buf = append(buf, cell, ' ')
+		if px <= 0 || px >= width-1 {
+			vx *= -1
 		}
-		buf = append(buf, '\n')
-	}
 
-	fmt.Println(string(buf))
+		if py <= 0 || py >= height-1 {
+			vy *= -1
+		}
+
+		for y := range board[0] {
+			for x := range board {
+				board[x][y] = false
+			}
+		}
+
+		board[px][py] = true
+
+		buf := make([]rune, 0, (width*2+1)*height)
+
+		buf = buf[:0]
+
+		for y := range board[0] {
+			for x := range board {
+				cell = cellEmpty
+				if board[x][y] {
+					cell = ball
+				}
+				buf = append(buf, cell, ' ')
+			}
+			buf = append(buf, '\n')
+		}
+		screen.MoveTopLeft()
+		fmt.Println(string(buf))
+		fmt.Printf("Cap: %d - Height: %d", cap(buf), (width*2+1)*height)
+		time.Sleep(time.Second / 20)
+	}
 }
