@@ -19,6 +19,8 @@ func main() {
 		board[row] = make([]bool, height)
 	}
 
+	buf := make([]rune, 0, width*height)
+
 	board[0][0] = true
 
 	for y := range board[0] {
@@ -27,9 +29,10 @@ func main() {
 			if board[x][y] {
 				cell = ball
 			}
-			fmt.Print(string(cell))
-			fmt.Print(" ")
+			buf = append(buf, cell, ' ')
 		}
-		fmt.Println()
+		buf = append(buf, '\n')
 	}
+
+	fmt.Println(string(buf))
 }
