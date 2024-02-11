@@ -9,19 +9,18 @@ import (
 func main() {
 
 	const (
-		width  = 50
-		height = 10
-
-		cellEmpty = ' '
-		ball      = '⚾'
+		width, height = 50, 10
+		cellEmpty     = ' '
+		ball          = '⚾'
 
 		maxFrames = 1200
 	)
 
 	var (
-		px, py int
-		cell   rune
-		vx, vy = 1, 1
+		px, py   int
+		cell     rune
+		vx, vy   = 1, 1
+		ppx, ppy int
 	)
 
 	board := make([][]bool, width)
@@ -35,19 +34,18 @@ func main() {
 		px += vx
 		py += vy
 
-		if px <= 0 || px >= width-1 {
+		if px <= 0 || px >= width-vx {
 			vx *= -1
 		}
 
-		if py <= 0 || py >= height-1 {
+		if py <= 0 || py >= height-vy {
 			vy *= -1
 		}
 
-		for y := range board[0] {
-			for x := range board {
-				board[x][y] = false
-			}
-		}
+		board[px][py], board[ppx][ppy] = true, false
+
+		ppx = px
+		ppy = py
 
 		board[px][py] = true
 
